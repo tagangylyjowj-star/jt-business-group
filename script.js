@@ -71,10 +71,10 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  const webhookUrl = form.getAttribute('action')?.trim();
+  const formEndpoint = form.getAttribute('action')?.trim();
 
-  if (!webhookUrl) {
-    setStatus('Форма заполнена корректно. Для отправки заявки необходимо подключить webhook Make.com в атрибуте action.', 'info');
+  if (!formEndpoint) {
+    setStatus('Отправка заявок временно недоступна. Пожалуйста, повторите попытку позже.', 'error');
     return;
   }
 
@@ -84,10 +84,16 @@ form.addEventListener('submit', async (event) => {
   submitButton.textContent = 'Отправка…';
 
   try {
-    const response = await fetch(webhookUrl, {
+    const response = await fetch(formEndpoint, {
       method: 'POST',
+      headers: { Accept: 'application/json' },
       body: new FormData(form)
     });
+
+    if (response.status === 429) {
+      setStatus('Слишком много запросов. Пожалуйста, повторите попытку позже.', 'error');
+      return;
+    }
 
     if (!response.ok) throw new Error('Request failed');
 
