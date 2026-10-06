@@ -26,7 +26,7 @@ document.querySelectorAll('[data-direction]').forEach((link) => {
   link.addEventListener('click', () => {
     const direction = document.querySelector('#direction');
     direction.value = link.dataset.direction;
-    direction.closest('.field').classList.remove('is-invalid');
+    markField(direction, fieldIsValid(direction));
   });
 });
 
@@ -73,7 +73,7 @@ form.addEventListener('submit', async (event) => {
   statusBox.className = 'form-status';
 
   // Formspree also checks this honeypot on its servers.
-  if (form.elements.namedItem('_gotcha')?.value.trim()) {
+  if (form.elements.namedItem('_gotcha')?.value) {
     setStatus('Не удалось отправить заявку. Свяжитесь с нами по электронной почте.', 'error');
     return;
   }
@@ -113,25 +113,31 @@ form.addEventListener('submit', async (event) => {
       body: payload,
       signal: controller.signal
     });
-    const data = await response.json().catch(() => null);
     if (response.status === 429) {
       setStatus('Слишком много запросов. Подождите и повторите попытку позже. Данные сохранены в форме.', 'error');
       return;
     }
-    if (!response.ok || data?.ok === false || data?.errors?.length) {
+    // A server failure cannot prove that the submission was not processed.
+    if (response.status >= 500) throw new Error('Unconfirmed server result');
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.ok === false || typeof data?.error === 'string' || Array.isArray(data?.errors)) {
       // Never render server text as HTML or claim success on a validation error.
-      const serverErrors = Array.isArray(data?.errors) ? data.errors : [];
+      const serverErrors = Array.isArray(data?.errors)
+        ? data.errors.filter((error) => error && typeof error === 'object') : [];
       serverErrors.forEach((error) => {
         const field = requiredFields.find((item) => item.name === error.field);
         if (field) markField(field, false);
       });
-      const needsCaptcha = serverErrors.some((error) => /captcha/i.test(String(error.code) + ' ' + String(error.message)));
+      const needsCaptcha = /captcha/i.test(String(data?.error)) || serverErrors.some((error) => /captcha/i.test(String(error.code) + ' ' + String(error.message)));
       setStatus(needsCaptcha
         ? 'Сервис требует проверку от спама. Напишите на tagangylyjowj@gmail.com. Данные сохранены в форме.'
         : 'Сервис не принял заявку. Проверьте данные или напишите на tagangylyjowj@gmail.com. Данные сохранены в форме.', 'error');
+      requiredFields.find((field) => field.getAttribute('aria-invalid') === 'true')?.focus();
       return;
     }
-    if (!data || data.ok !== true) {
+    // Formspree's official client recognizes { next: string }, without an ok flag.
+    // Keep accepting explicit ok:true, but treat non-JSON/unknown bodies as uncertain.
+    if (!data || (data.ok !== true && typeof data.next !== 'string')) {
       throw new Error('Unconfirmed response');
     }
     lastAcceptedAt = Date.now();
