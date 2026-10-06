@@ -184,30 +184,30 @@
           <div class="form-row">
             <div class="field">
               <label for="name">Имя <span aria-hidden="true">*</span></label>
-              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" placeholder="Ваше имя">
-              <small class="field-error">Укажите имя</small>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" aria-describedby="name-error" placeholder="Ваше имя">
+              <small class="field-error" id="name-error">Укажите имя</small>
             </div>
             <div class="field">
               <label for="phone">Телефон <span aria-hidden="true">*</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="+993 __ ______">
-              <small class="field-error">Укажите телефон: от 7 до 15 цифр</small>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40" aria-describedby="phone-error" placeholder="+993 __ ______">
+              <small class="field-error" id="phone-error">Укажите телефон: от 7 до 15 цифр</small>
             </div>
           </div>
           <div class="field">
             <label for="direction">Направление бизнеса <span aria-hidden="true">*</span></label>
-            <select id="direction" name="direction" required>
+            <select id="direction" name="direction" required aria-describedby="direction-error">
               <option value="" selected disabled>Выберите направление</option>
               <option value="Коммерческая недвижимость">Коммерческая недвижимость</option>
               <option value="Агропромышленный комплекс">Агропромышленный комплекс</option>
               <option value="Промышленность и Строительство">Промышленность и Строительство</option>
               <option value="Юридический консалтинг">Юридический консалтинг</option>
             </select>
-            <small class="field-error">Выберите направление</small>
+            <small class="field-error" id="direction-error">Выберите направление</small>
           </div>
           <div class="field">
             <label for="message">Текст запроса <span aria-hidden="true">*</span></label>
-            <textarea id="message" name="message" rows="5" required maxlength="5000" placeholder="Кратко опишите задачу"></textarea>
-            <small class="field-error">Опишите ваш запрос</small>
+            <textarea id="message" name="message" rows="5" required maxlength="5000" aria-describedby="message-error" placeholder="Кратко опишите задачу"></textarea>
+            <small class="field-error" id="message-error">Опишите ваш запрос</small>
           </div>
           <div class="form-submit">
             <button class="button button-form" type="submit">Оставить заявку</button>
@@ -236,6 +236,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
