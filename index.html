@@ -180,17 +180,17 @@
         <form class="lead-form" id="lead-form" action="https://formspree.io/f/xeaoydwz" method="POST" novalidate>
           <input type="hidden" name="_subject" value="Новая заявка — JT BUSINESS GROUP">
           <input type="hidden" name="_language" value="ru">
-          <input type="text" name="_gotcha" style="display:none" />
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div class="form-row">
             <div class="field">
               <label for="name">Имя <span aria-hidden="true">*</span></label>
-              <input id="name" name="name" type="text" autocomplete="name" required placeholder="Ваше имя">
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" placeholder="Ваше имя">
               <small class="field-error">Укажите имя</small>
             </div>
             <div class="field">
               <label for="phone">Телефон <span aria-hidden="true">*</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+993 __ ______">
-              <small class="field-error">Укажите телефон</small>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="+993 __ ______">
+              <small class="field-error">Укажите телефон: от 7 до 15 цифр</small>
             </div>
           </div>
           <div class="field">
@@ -206,7 +206,7 @@
           </div>
           <div class="field">
             <label for="message">Текст запроса <span aria-hidden="true">*</span></label>
-            <textarea id="message" name="message" rows="5" required placeholder="Кратко опишите задачу"></textarea>
+            <textarea id="message" name="message" rows="5" required maxlength="5000" placeholder="Кратко опишите задачу"></textarea>
             <small class="field-error">Опишите ваш запрос</small>
           </div>
           <div class="form-submit">
@@ -236,6 +236,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
